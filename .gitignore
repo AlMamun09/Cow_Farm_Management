@@ -1,0 +1,11 @@
+# Visual Studio / .NET Core
+## Ignore all files in the .vs folder
+.vs/
+
+## Ignore build output
+[Bb]in/
+[Oo]bj/
+
+## Ignore user-specific files
+*.user
+*.suo
