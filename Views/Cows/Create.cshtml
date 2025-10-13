@@ -1,62 +1,88 @@
 ﻿@model Cow_Farm.Models.Cow
 
 @{
-    ViewData["Title"] = "Create";
+    // This logic correctly determines if we are in "Create" or "Edit" mode.
+    bool isEditMode = Model != null && Model.Id != 0;
+    ViewData["Title"] = isEditMode ? "Edit Cow Details" : "Add a New Cow";
 }
 
-<h1>Create</h1>
-
-<h4>Cow</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Name" class="control-label"></label>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Breed" class="control-label"></label>
-                <input asp-for="Breed" class="form-control" />
-                <span asp-validation-for="Breed" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="BirthDate" class="control-label"></label>
-                <input asp-for="BirthDate" class="form-control" />
-                <span asp-validation-for="BirthDate" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Gender" class="control-label"></label>
-                <select asp-for="Gender" class="form-control" asp-items="ViewBag.Genders">
-                    <option value="">-- Select Gender --</option>
-                </select>
-                <span asp-validation-for="Gender" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Status" class="control-label"></label>
-                <select asp-for="Status" class="form-control" asp-items="ViewBag.Statuses">
-                    <option value="">-- Select Status --</option>
-                </select>
-                <span asp-validation-for="Status" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Weight" class="control-label"></label>
-                <input asp-for="Weight" class="form-control" />
-                <span asp-validation-for="Weight" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title">@ViewData["Title"]</h3>
     </div>
-</div>
+    <form asp-action="Create" class="needs-validation" novalidate>
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+            @if (isEditMode)
+            {
+                <input type="hidden" asp-for="Id" />
+            }
 
+            <div class="row g-3">
+
+                @if (isEditMode && Model?.TagNumber != null)
+                {
+                    <div class="col-md-6">
+                        <label class="form-label">Tag Number</label>
+                        <input class="form-control" value="@Model.TagNumber" readonly />
+                        <input type="hidden" asp-for="TagNumber" />
+                    </div>
+                }
+
+                <div class="col-md-6">
+                    <label asp-for="Name" class="form-label"></label>
+                    <input asp-for="Name" class="form-control" />
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Breed" class="form-label"></label>
+                    <input asp-for="Breed" class="form-control" required />
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="BirthDate" class="form-label"></label>
+                    <input asp-for="BirthDate" class="form-control" required />
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Gender" class="form-label"></label>
+                    <select asp-for="Gender" class="form-select" asp-items="ViewBag.Genders" required>
+                        <option value="">Choose...</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Status" class="form-label"></label>
+                    <select asp-for="Status" class="form-select" asp-items="ViewBag.Statuses" required>
+                        <option value="">Choose...</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="DamId" class="form-label"></label>
+                    <select asp-for="DamId" class="form-select" asp-items="ViewBag.Dams">
+                        <option value="">Choose...</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="SireId" class="form-label"></label>
+                    <select asp-for="SireId" class="form-select" asp-items="ViewBag.Sires">
+                        <option value="">Choose...</option>
+                    </select>
+                </div>
+
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">@(isEditMode ? "Save Changes" : "Create Cow")</button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+        </div>
+    </form>
+</div>
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
 }

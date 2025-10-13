@@ -1,18 +1,18 @@
-﻿@model IEnumerable<Cow_Farm.Models.Cow>
+﻿@model IEnumerable<Cow_Farm.Models.HealthRecord>
 
 @{
-    ViewData["Title"] = "Cow Management";
+    ViewData["Title"] = "Health Records";
 }
 
 <div class="card card-primary card-outline">
     <div class="card-header">
         <h3 class="card-title">
-            <i class="bi bi-grid-fill me-2"></i>
+            <i class="bi bi-heart-pulse me-2"></i>
             @ViewData["Title"]
         </h3>
         <div class="card-tools">
             <a asp-action="Create" class="btn btn-primary btn-sm">
-                <i class="bi bi-plus-lg me-1"></i> Add New Cow
+                <i class="bi bi-plus-lg me-1"></i> Add New Record
             </a>
         </div>
     </div>
@@ -21,12 +21,12 @@
             <table class="table table-bordered table-hover">
                 <thead>
                     <tr>
-                        <th>Tag Number</th>
-                        <th>Name</th>
-                        <th>Breed</th>
-                        <th>Date of Birth</th>
-                        <th>Gender</th>
-                        <th>Status</th>
+                        <th>Cow Tag</th>
+                        <th>Cow Name</th>
+                        <th>Event Type</th>
+                        <th>Record Date</th>
+                        <th>Description</th>
+                        <th>Veterinarian</th>
                         <th style="width: 150px;">Actions</th>
                     </tr>
                 </thead>
@@ -34,12 +34,23 @@
                     @foreach (var item in Model)
                     {
                         <tr>
-                            <td>@Html.DisplayFor(modelItem => item.TagNumber)</td>
-                            <td>@(item.Name ?? "N/A")</td>
-                            <td>@Html.DisplayFor(modelItem => item.Breed)</td>
-                            <td>@Html.DisplayFor(modelItem => item.BirthDate)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Gender)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Status)</td>
+                            <td>
+                                @if (item.Cow != null)
+                                {
+                                    <a asp-controller="Cows" asp-action="Details" asp-route-id="@item.CowId">
+                                        @Html.DisplayFor(modelItem => item.Cow.TagNumber)
+                                    </a>
+                                }
+                                else
+                                {
+                                    <span class="text-muted">N/A</span>
+                                }
+                            </td>
+                            <td>@(item.Cow?.Name ?? "N/A")</td>
+                            <td>@Html.DisplayFor(modelItem => item.EventType)</td>
+                            <td>@Html.DisplayFor(modelItem => item.RecordDate)</td>
+                            <td>@Html.DisplayFor(modelItem => item.Description)</td>
+                            <td>@(item.Veterinarian ?? "N/A")</td>
                             <td class="text-nowrap">
                                 <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" title="Edit">
                                     <i class="bi bi-pencil-square"></i>

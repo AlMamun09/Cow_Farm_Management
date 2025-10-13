@@ -1,0 +1,74 @@
+﻿@model Cow_Farm.Models.HealthRecord
+
+@{
+    ViewData["Title"] = "Health Record Details";
+}
+
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="bi bi-file-earmark-text me-2"></i>
+            @ViewData["Title"]
+        </h3>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3 col-md-2">
+                <i class="bi bi-tag me-2"></i>Cow Tag
+            </dt>
+            <dd class="col-sm-9 col-md-10">
+                @if (Model.Cow != null)
+                {
+                    <a asp-controller="Cows" asp-action="Details" asp-route-id="@Model.Cow.Id">
+                        @Html.DisplayFor(model => model.Cow.TagNumber)
+                    </a>
+                }
+                else
+                {
+                    <span class="text-muted">N/A</span>
+                }
+            </dd>
+
+            <dt class="col-sm-3 col-md-2">
+                <i class="bi bi-person-text me-2"></i>Cow Name
+            </dt>
+            <dd class="col-sm-9 col-md-10">
+                @(Model.Cow?.Name ?? "N/A")
+            </dd>
+
+            <dt class="col-sm-3 col-md-2">
+                <i class="bi bi-calendar-event me-2"></i>Record Date
+            </dt>
+            <dd class="col-sm-9 col-md-10">
+                @Html.DisplayFor(model => model.RecordDate)
+            </dd>
+
+            <dt class="col-sm-3 col-md-2">
+                <i class="bi bi-activity me-2"></i>Event Type
+            </dt>
+            <dd class="col-sm-9 col-md-10">
+                @Html.DisplayFor(model => model.EventType)
+            </dd>
+
+            <dt class="col-sm-3 col-md-2">
+                <i class="bi bi-card-text me-2"></i>Description
+            </dt>
+            <dd class="col-sm-9 col-md-10">
+                @Html.DisplayFor(model => model.Description)
+            </dd>
+
+            <dt class="col-sm-3 col-md-2">
+                <i class="bi bi-person-badge me-2"></i>Veterinarian
+            </dt>
+            <dd class="col-sm-9 col-md-10">
+                @(Model.Veterinarian ?? "N/A")
+            </dd>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">
+            <i class="bi bi-pencil-square me-1"></i> Edit
+        </a>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+    </div>
+</div>

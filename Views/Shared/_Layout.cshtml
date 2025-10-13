@@ -8,7 +8,13 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>@ViewData["Title"] - Al Mamun</title>
+    <title>@ViewData["Title"] - Amar Gorur Farm</title>
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Russo+One&display=swap" rel="stylesheet">
+
+    <link rel="icon" type="image/png" href="~/Images/logoo.png" />
 
     <meta name="description" content="A Simple Dashboard using ASP.NET Core MVC" />
     <meta name="author" content="ColorlibHQ" />
@@ -25,11 +31,12 @@
           href="https://cdn.jsdelivr.net/npm/overlayscrollbars@2.11.0/styles/overlayscrollbars.min.css"
           integrity="sha256-kLhes9Z4KjL/tI+T32x6IcHJbE0rL4kCr2kew2nCgYc="
           crossorigin="anonymous" />
-    <link rel="stylesheet"
-          href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.13.1/font/bootstrap-icons.min.css"
-          integrity="sha256-Ncs4NbsT4aP185PDBj3Fk/65qf6sR5vQyE5BwXoT3pU="
-          crossorigin="anonymous" />
+
+    <link rel="stylesheet" href="~/lib/bootstrap-icons/font/bootstrap-icons.min.css" />
+    
 </head>
+
+
 <body class="layout-fixed sidebar-expand-lg sidebar-open bg-body-tertiary">
     <div class="app-wrapper">
         <nav class="app-header navbar navbar-expand bg-body">
@@ -40,8 +47,12 @@
                             <i class="bi bi-list"></i>
                         </a>
                     </li>
-                    <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Home</a></li>
-                    <li class="nav-item d-none d-md-block"><a href="#" class="nav-link">Contact</a></li>
+                    <li class="nav-item d-none d-md-block">
+                        <a asp-controller="Home" asp-action="Index" class="nav-link">Home</a>
+                    </li>
+                    <li class="nav-item d-none d-md-block">
+                        <a asp-controller="Home" asp-action="Contact" class="nav-link">Contact</a>
+                    </li>
                 </ul>
 
                 <ul class="navbar-nav ms-auto">
@@ -78,10 +89,12 @@
         <aside class="app-sidebar bg-body-secondary shadow" data-bs-theme="dark">
             <div class="sidebar-brand">
                 <a href="~/" class="brand-link">
-                    <img src="~/Images/Image.jpg"
+                    <img src="~/Images/logoo.png"
                          alt="AdminLTE Logo"
                          class="brand-image opacity-75 shadow" />
-                    <span class="brand-text fw-light">Al Mamun</span>
+                    <span class="brand-text fw-semibold">
+                        Amar Gorur Farm
+                    </span>
                 </a>
             </div>
 
@@ -94,12 +107,16 @@
                         data-accordion="false"
                         id="navigation">
 
+                        <li class="nav-header">HOME</li>
+
                         <li class="nav-item">
                             <a asp-controller="Home" asp-action="Index" class="nav-link">
-                                <i class="nav-icon bi bi-grid-fill"></i>
-                                <p>Overview</p>
+                                <i class="nav-icon bi bi-house"></i>
+                                <p>Dashboard</p>
                             </a>
                         </li>
+
+                        <li class="nav-header">MANAGEMENT</li>
 
                         <li class="nav-item">
                             <a asp-controller="Cows" asp-action="Index" class="nav-link">
@@ -109,16 +126,39 @@
                         </li>
 
                         <li class="nav-item">
-                            <a asp-controller="Dashboard" asp-action="Index2" class="nav-link">
-                                <i class="nav-icon bi bi-graph-up"></i>
-                                <p>Dashboard v2</p>
+                            <a asp-controller="HealthRecords" asp-action="Index" class="nav-link">
+                                <i class="nav-icon bi bi-heart-pulse"></i>
+                                <p>Health Records</p>
                             </a>
                         </li>
 
                         <li class="nav-item">
-                            <a asp-controller="Dashboard" asp-action="Index3" class="nav-link">
-                                <i class="nav-icon bi bi-bar-chart-line"></i>
-                                <p>Dashboard v3</p>
+                            <a asp-controller="MilkProductions" asp-action="Index" class="nav-link">
+                                <i class="nav-icon bi bi-droplet-half"></i>
+                                <p>Milk Production</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a asp-controller="MeatProductions" asp-action="Index" class="nav-link">
+                                <i class="nav-icon bi bi-box-seam"></i>
+                                <p>Meat Production</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-header">FINANCIAL</li>
+
+                        <li class="nav-item">
+                            <a asp-controller="Incomes" asp-action="Index" class="nav-link">
+                                <i class="nav-icon bi bi-cash-coin"></i>
+                                <p>Income</p>
+                            </a>
+                        </li>
+
+                        <li class="nav-item">
+                            <a asp-controller="Costs" asp-action="Index" class="nav-link">
+                                <i class="nav-icon bi bi-receipt"></i>
+                                <p>Costs</p>
                             </a>
                         </li>
 

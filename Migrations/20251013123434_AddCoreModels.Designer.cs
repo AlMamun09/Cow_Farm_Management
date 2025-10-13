@@ -4,6 +4,7 @@ using Cow_Farm.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,11 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Cow_Farm.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20251013123434_AddCoreModels")]
+    partial class AddCoreModels
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -62,18 +65,12 @@ namespace Cow_Farm.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("DamId")
-                        .HasColumnType("int");
-
                     b.Property<int>("Gender")
                         .HasColumnType("int");
 
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("SireId")
-                        .HasColumnType("int");
 
                     b.Property<int>("Status")
                         .HasColumnType("int");
@@ -83,10 +80,6 @@ namespace Cow_Farm.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("DamId");
-
-                    b.HasIndex("SireId");
 
                     b.ToTable("Cows");
                 });
@@ -398,21 +391,6 @@ namespace Cow_Farm.Migrations
                     b.HasKey("UserId", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
-                });
-
-            modelBuilder.Entity("Cow_Farm.Models.Cow", b =>
-                {
-                    b.HasOne("Cow_Farm.Models.Cow", "Dam")
-                        .WithMany()
-                        .HasForeignKey("DamId");
-
-                    b.HasOne("Cow_Farm.Models.Cow", "Sire")
-                        .WithMany()
-                        .HasForeignKey("SireId");
-
-                    b.Navigation("Dam");
-
-                    b.Navigation("Sire");
                 });
 
             modelBuilder.Entity("Cow_Farm.Models.HealthRecord", b =>

@@ -1,54 +1,93 @@
 ﻿@model Cow_Farm.Models.Cow
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Cow Details";
 }
 
-<h1>Details</h1>
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="bi bi-person-vcard me-2"></i>
+            @ViewData["Title"]: @Model.TagNumber
+        </h3>
+    </div>
+    <div class="card-body">
+        <dl class="row">
+            <dt class="col-sm-3 col-md-2">
+                <i class="bi bi-tag me-2"></i>Tag Number
+            </dt>
+            <dd class="col-sm-9 col-md-10">
+                @Html.DisplayFor(model => model.TagNumber)
+            </dd>
 
-<div>
-    <h4>Cow</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Name)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Name)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Breed)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Breed)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.BirthDate)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.BirthDate)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Gender)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Gender)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Status)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Status)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Weight)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Weight)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.Id">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+            <dt class="col-sm-3 col-md-2">
+                <i class="bi bi-person-text me-2"></i>Name
+            </dt>
+            <dd class="col-sm-9 col-md-10">
+                @(Model.Name ?? "N/A")
+            </dd>
+
+            <dt class="col-sm-3 col-md-2">
+                <i class="bi bi-diagram-3 me-2"></i>Breed
+            </dt>
+            <dd class="col-sm-9 col-md-10">
+                @Html.DisplayFor(model => model.Breed)
+            </dd>
+
+            <dt class="col-sm-3 col-md-2">
+                <i class="bi bi-calendar-event me-2"></i>Date of Birth
+            </dt>
+            <dd class="col-sm-9 col-md-10">
+                @Html.DisplayFor(model => model.BirthDate)
+            </dd>
+
+            <dt class="col-sm-3 col-md-2">
+                <i class="bi bi-gender-ambiguous me-2"></i>Gender
+            </dt>
+            <dd class="col-sm-9 col-md-10">
+                @Html.DisplayFor(model => model.Gender)
+            </dd>
+
+            <dt class="col-sm-3 col-md-2">
+                <i class="bi bi-heart-pulse me-2"></i>Status
+            </dt>
+            <dd class="col-sm-9 col-md-10">
+                @Html.DisplayFor(model => model.Status)
+            </dd>
+
+            <dt class="col-sm-3 col-md-2">
+                <i class="bi bi-gender-female me-2"></i>Mother (Dam)
+            </dt>
+            <dd class="col-sm-9 col-md-10">
+                @if (Model.Dam != null)
+                {
+                    <a asp-action="Details" asp-route-id="@Model.Dam.Id">@Model.Dam.TagNumber</a>
+                }
+                else
+                {
+                    <span class="text-muted">N/A</span>
+                }
+            </dd>
+
+            <dt class="col-sm-3 col-md-2">
+                <i class="bi bi-gender-male me-2"></i>Father (Sire)
+            </dt>
+            <dd class="col-sm-9 col-md-10">
+                @if (Model.Sire != null)
+                {
+                    <a asp-action="Details" asp-route-id="@Model.Sire.Id">@Model.Sire.TagNumber</a>
+                }
+                else
+                {
+                    <span class="text-muted">N/A</span>
+                }
+            </dd>
+        </dl>
+    </div>
+    <div class="card-footer">
+        <a asp-action="Edit" asp-route-id="@Model?.Id" class="btn btn-primary">
+            <i class="bi bi-pencil-square me-1"></i> Edit
+        </a>
+        <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+    </div>
 </div>

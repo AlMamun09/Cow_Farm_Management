@@ -46,3 +46,11 @@ button.accept-policy {
   white-space: nowrap;
   line-height: 60px;
 }
+
+.sidebar-brand .brand-text {
+    font-family: 'Russo One', sans-serif;
+    color: #4A5C3A; /* This is the green from your logo */
+    font-weight: 400; /* Russo One is already bold, so 400 is standard */
+    text-transform: uppercase; /* Makes the text all caps, like the MAИA logo */
+    letter-spacing: 1px; /* Adds a little space between letters */
+}

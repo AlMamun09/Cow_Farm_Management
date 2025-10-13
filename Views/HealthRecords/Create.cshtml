@@ -1,0 +1,64 @@
+﻿@model Cow_Farm.Models.HealthRecord
+
+@{
+    bool isEditMode = Model != null && Model.Id != 0;
+    ViewData["Title"] = isEditMode ? "Edit Health Record" : "Create Health Record";
+}
+
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title">@ViewData["Title"]</h3>
+    </div>
+    <form asp-action="Create" class="needs-validation" novalidate>
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+
+            @if (isEditMode)
+            {
+                <input type="hidden" asp-for="Id" />
+            }
+
+            <div class="row g-3">
+
+                <div class="col-md-6">
+                    <label asp-for="CowId" class="form-label">Cow Tag Number</label>
+                    <select asp-for="CowId" class="form-select" asp-items="ViewBag.CowId" required>
+                        <option value="">Choose...</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="EventType" class="form-label"></label>
+                    <select asp-for="EventType" class="form-select" asp-items="ViewBag.HealthEventTypes" required>
+                        <option value="">Choose...</option>
+                    </select>
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="RecordDate" class="form-label"></label>
+                    <input asp-for="RecordDate" class="form-control" required />
+                </div>
+
+                <div class="col-md-6">
+                    <label asp-for="Veterinarian" class="form-label"></label>
+                    <input asp-for="Veterinarian" class="form-control" />
+                </div>
+
+                <div class="col-12">
+                    <label asp-for="Description" class="form-label"></label>
+                    <textarea asp-for="Description" class="form-control" required></textarea>
+                </div>
+
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">@(isEditMode ? "Save Changes" : "Submit")</button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+        </div>
+    </form>
+</div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
