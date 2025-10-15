@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cow_Farm.Data;
+using Cow_Farm.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Cow_Farm.Data;
-using Cow_Farm.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cow_Farm.Controllers
 {
@@ -46,6 +47,7 @@ namespace Cow_Farm.Controllers
         }
 
         // GET: HealthRecords/Create
+        [Authorize]
         public IActionResult Create()
         {
             ViewData["CowId"] = new SelectList(_context.Cows, "Id", "TagNumber");
@@ -56,6 +58,7 @@ namespace Cow_Farm.Controllers
         // POST: HealthRecords/Create OR HealthRecords/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
+        [Authorize]
         public async Task<IActionResult> Create([Bind("Id,CowId,EventType,RecordDate,Description,Veterinarian")] HealthRecord healthRecord)
         {
             if (ModelState.IsValid)
@@ -81,6 +84,7 @@ namespace Cow_Farm.Controllers
         }
 
         // GET: HealthRecords/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -101,8 +105,9 @@ namespace Cow_Farm.Controllers
             return View("Create", healthRecord);
         }
 
-        
+
         // GET: HealthRecords/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -122,6 +127,7 @@ namespace Cow_Farm.Controllers
         }
 
         // POST: HealthRecords/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)

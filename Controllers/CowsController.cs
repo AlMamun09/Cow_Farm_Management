@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Cow_Farm.Data;
+using Cow_Farm.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using Cow_Farm.Data;
-using Cow_Farm.Models;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Cow_Farm.Controllers
 {
@@ -43,7 +44,9 @@ namespace Cow_Farm.Controllers
             return View(cow);
         }
 
+
         // GET: Cows/Create
+        [Authorize]
         public async Task<IActionResult> Create()
         {
             ViewBag.Genders = new SelectList(Enum.GetValues(typeof(Gender)));
@@ -57,6 +60,7 @@ namespace Cow_Farm.Controllers
         // POST: Cows/Create
         // To protect from overposting attacks, enable the specific properties you want to bind to.
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Id,TagNumber,Name,Breed,BirthDate,Gender,Status,DamId,SireId")] Cow cow)
@@ -101,6 +105,7 @@ namespace Cow_Farm.Controllers
         }
 
         // GET: Cows/Edit/5
+        [Authorize]
         public async Task<IActionResult> Edit(int? id)
         {
             if (id == null)
@@ -124,6 +129,7 @@ namespace Cow_Farm.Controllers
 
 
         // GET: Cows/Delete/5
+        [Authorize]
         public async Task<IActionResult> Delete(int? id)
         {
             if (id == null)
@@ -142,6 +148,7 @@ namespace Cow_Farm.Controllers
         }
 
         // POST: Cows/Delete/5
+        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
