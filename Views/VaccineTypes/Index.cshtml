@@ -1,0 +1,65 @@
+﻿@model IEnumerable<Cow_Farm.Models.VaccineType>
+
+@{
+    ViewData["Title"] = "Vaccine Catalog";
+}
+
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="bi bi-list-task me-2"></i>
+            @ViewData["Title"]
+        </h3>
+        <div class="card-tools">
+            <a asp-action="Create" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-lg me-1"></i> Add New Vaccine Type
+            </a>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Vaccine Name</th>
+                        <th>Company</th>
+                        <th>Price</th>
+                        <th>Description</th>
+                        <th style="width: 150px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @if (Model != null && Model.Any())
+                    {
+                        @foreach (var item in Model)
+                        {
+                            <tr>
+                                <td>@item.Name</td>
+                                <td>@(item.VaccineManufacturer ?? "N/A")</td>
+                                <td>@item.Price.ToString("N2") Taka</td>
+                                <td>@(item.Description ?? "N/A")</td>
+                                <td class="text-nowrap">
+                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" title="Edit">
+                                        <i class="bi bi-pencil-square"></i>
+                                    </a>
+                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm ms-1" title="Details">
+                                        <i class="bi bi-info-circle"></i>
+                                    </a>
+                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm ms-1" title="Delete">
+                                        <i class="bi bi-trash"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                        }
+                    }
+                    else
+                    {
+                        <tr>
+                            <td colspan="5" class="text-center">No vaccine types have been added yet.</td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

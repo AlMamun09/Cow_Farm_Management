@@ -1,0 +1,56 @@
+﻿@model IEnumerable<Cow_Farm.Models.Vaccination>
+
+@{
+    ViewData["Title"] = "Vaccination Records";
+}
+
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title">
+            <i class="bi bi-eyedropper me-2"></i>
+            @ViewData["Title"]
+        </h3>
+        <div class="card-tools">
+            <a asp-action="Create" class="btn btn-primary btn-sm">
+                <i class="bi bi-plus-lg me-1"></i> Add Vaccination Record
+            </a>
+        </div>
+    </div>
+    <div class="card-body p-0">
+        <div class="table-responsive">
+            <table class="table table-bordered table-hover">
+                <thead>
+                    <tr>
+                        <th>Cow Tag</th>
+                        <th>Vaccine Name</th>
+                        <th>Date Given</th>
+                        <th>Next Due Date</th>
+                        <th style="width: 150px;">Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>@(item.Cow?.TagNumber ?? "N/A")</td>
+                            <td>@(item.VaccineType?.Name ?? "N/A")</td>
+                            <td>@item.DateGiven.ToShortDateString()</td>
+                            <td>@(item.NextDueDate?.ToShortDateString() ?? "N/A")</td>
+                            <td class="text-nowrap">
+                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" title="Edit">
+                                    <i class="bi bi-pencil-square"></i>
+                                </a>
+                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm ms-1" title="Details">
+                                    <i class="bi bi-info-circle"></i>
+                                </a>
+                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm ms-1" title="Delete">
+                                    <i class="bi bi-trash"></i>
+                                </a>
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>

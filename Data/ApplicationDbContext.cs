@@ -24,5 +24,7 @@ namespace Cow_Farm.Data
         public DbSet<MeatProduction> MeatProductions { get; set; }
         public DbSet<Income> Incomes { get; set; }
         public DbSet<Cost> Costs { get; set; }
+        public DbSet<Vaccination> Vaccinations { get; set; }
+        public DbSet<VaccineType> VaccineTypes { get; set; }
     }
 }

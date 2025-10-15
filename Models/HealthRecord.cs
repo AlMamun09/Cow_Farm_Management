@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Cow_Farm.Models
 {
-    public enum  HealthEventType { Vaccination, Treatment, GeneralCheckUp }
+    public enum  HealthEventType { Treatment, GeneralCheckUp }
     public class HealthRecord
     {
         public int Id { get; set; }

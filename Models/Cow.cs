@@ -44,6 +44,7 @@ namespace Cow_Farm.Models
         // Navigation properties for related records
         public virtual ICollection<MilkProduction> MilkProductions { get; set; } = new List<MilkProduction>();
         public virtual ICollection<HealthRecord> HealthRecords { get; set; } = new List<HealthRecord>();
+        public virtual ICollection<Vaccination> Vaccinations { get; set; } = new List<Vaccination>();
 
     }
 }

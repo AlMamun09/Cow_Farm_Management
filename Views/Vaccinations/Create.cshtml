@@ -1,0 +1,48 @@
+﻿@model Cow_Farm.Models.Vaccination
+
+@{
+    ViewData["Title"] = "Add Vaccination Record";
+}
+
+<div class="card card-primary card-outline">
+    <div class="card-header">
+        <h3 class="card-title">@ViewData["Title"]</h3>
+    </div>
+    <form asp-action="Create" class="needs-validation" novalidate>
+        <div class="card-body">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="row g-3">
+                <div class="col-md-6">
+                    <label asp-for="CowId" class="form-label"></label>
+                    <select asp-for="CowId" class="form-select" asp-items="ViewBag.CowId" required>
+                        <option value="">Choose a Cow...</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="VaccineTypeId" class="form-label"></label>
+                    <select asp-for="VaccineTypeId" class="form-select" asp-items="ViewBag.VaccineTypeId" required>
+                        <option value="">Choose a Vaccine...</option>
+                    </select>
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="DateGiven" class="form-label"></label>
+                    <input asp-for="DateGiven" class="form-control" required />
+                </div>
+                <div class="col-md-6">
+                    <label asp-for="NextDueDate" class="form-label"></label>
+                    <input asp-for="NextDueDate" class="form-control" />
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="submit" class="btn btn-primary">Submit</button>
+            <a asp-action="Index" class="btn btn-secondary ms-2">Back to List</a>
+        </div>
+    </form>
+</div>
+
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
