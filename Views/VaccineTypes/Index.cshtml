@@ -1,6 +1,4 @@
-﻿@model IEnumerable<Cow_Farm.Models.VaccineType>
-
-@{
+﻿@{
     ViewData["Title"] = "Vaccine Catalog";
 }
 
@@ -18,48 +16,61 @@
     </div>
     <div class="card-body p-0">
         <div class="table-responsive">
-            <table class="table table-bordered table-hover">
+            <table id="vaccineTypesTable" class="table table-bordered table-hover">
                 <thead>
                     <tr>
                         <th>Vaccine Name</th>
-                        <th>Company</th>
+                        <th>Vaccine Manufacturer</th>
                         <th>Price</th>
                         <th>Description</th>
-                        <th style="width: 150px;">Actions</th>
+                        <th class="text-center" style="width: 150px;">Actions</th>
                     </tr>
                 </thead>
                 <tbody>
-                    @if (Model != null && Model.Any())
-                    {
-                        @foreach (var item in Model)
-                        {
-                            <tr>
-                                <td>@item.Name</td>
-                                <td>@(item.VaccineManufacturer ?? "N/A")</td>
-                                <td>@item.Price.ToString("N2") Taka</td>
-                                <td>@(item.Description ?? "N/A")</td>
-                                <td class="text-nowrap">
-                                    <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" title="Edit">
-                                        <i class="bi bi-pencil-square"></i>
-                                    </a>
-                                    <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm ms-1" title="Details">
-                                        <i class="bi bi-info-circle"></i>
-                                    </a>
-                                    <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm ms-1" title="Delete">
-                                        <i class="bi bi-trash"></i>
-                                    </a>
-                                </td>
-                            </tr>
-                        }
-                    }
-                    else
-                    {
-                        <tr>
-                            <td colspan="5" class="text-center">No vaccine types have been added yet.</td>
-                        </tr>
-                    }
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            const columns = [
+                { "data": "name" },
+                { "data": "vaccineManufacturer", "defaultContent": "N/A" },
+                {
+                    "data": "price",
+                    "className": "text-end", // Right-align the data in this column
+                    "render": function (data, type, row) {
+                        return data.toFixed(2) + " Taka";
+                    }
+                },
+                {
+                    "data": "description",
+                    "defaultContent": "N/A",
+                    "render": function (data, type, row) {
+                        // Truncate long descriptions and add a tooltip
+                        if (data && data.length > 50) {
+                            return `<span title="${data}">${data.substring(0, 50)}...</span>`;
+                        }
+                        return data;
+                    }
+                },
+                {
+                    "data": "id",
+                    "className": "text-center", // Center-align the buttons
+                    "render": function (data, type, row) {
+                        return `
+                            <a href="/VaccineTypes/Edit/${data}" class="btn btn-secondary btn-sm" title="Edit"><i class="bi bi-pencil-square"></i></a>
+                            <a href="/VaccineTypes/Details/${data}" class="btn btn-info btn-sm ms-1" title="Details"><i class="bi bi-info-circle"></i></a>
+                            <a href="/VaccineTypes/Delete/${data}" class="btn btn-danger btn-sm ms-1" title="Delete"><i class="bi bi-trash"></i></a>`;
+                    },
+                    "orderable": false
+                }
+            ];
+
+            loadTable('vaccineTypesTable', '@Url.Action("GetVaccineTypes", "VaccineTypes")', columns);
+        });
+    </script>
+}

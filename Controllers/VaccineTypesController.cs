@@ -1,4 +1,6 @@
 ﻿using Cow_Farm.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -14,16 +16,25 @@ namespace Cow_Farm.Controllers
 
         public async Task<IActionResult> Index()
         {
-            var vaccineTypes = await _context.VaccineTypes.ToListAsync();
-            return View(vaccineTypes);
+            return View();
         }
 
+        [HttpGet]
+        public async Task<IActionResult> GetVaccineTypes()
+        {
+            var vaccineTypes = await _context.VaccineTypes.ToListAsync();
+            return Json(vaccineTypes);
+        }
+
+
+        [Authorize]
         //Get: VaccineTpes/Create
         public IActionResult Create()
         {
             return View();
         }
 
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("Name,VaccineManufacturer,Price,Description")] Models.VaccineType vaccineType)
@@ -37,9 +48,13 @@ namespace Cow_Farm.Controllers
             {
                 _context.Add(vaccineType);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+                return Json(new { success = true, redirectUrl = Url.Action("Index", "VaccineTypes") });
             }
-            return View(vaccineType);
+            var errors = ModelState.ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+                );
+            return Json(new { success = false, errors = errors });
         }
     }
 }

@@ -1,7 +1,8 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using Cow_Farm.Data;
-using Microsoft.EntityFrameworkCore;
+﻿using Cow_Farm.Data;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Microsoft.EntityFrameworkCore;
 namespace Cow_Farm.Controllers
 {
     public class VaccinationsController : Controller
@@ -23,6 +24,7 @@ namespace Cow_Farm.Controllers
             return View(vaccinations);
         }
 
+        [Authorize]
         // GET: Vaccinations/Create
         public IActionResult Create()
         {
@@ -31,6 +33,7 @@ namespace Cow_Farm.Controllers
             return View();
         }
 
+        [Authorize]
         // POST: Vaccinations/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
