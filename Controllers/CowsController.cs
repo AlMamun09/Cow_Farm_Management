@@ -21,9 +21,28 @@ namespace Cow_Farm.Controllers
         }
 
         // GET: Cows
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
         {
-            return View(await _context.Cows.ToListAsync());
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetCows()
+        {
+            var cows = await _context.Cows
+                .Select(c => new
+                {
+                    c.Id,
+                    c.TagNumber,
+                    c.Name,
+                    c.Breed,
+                    BirthDate = c.BirthDate.ToShortDateString(), // Format the date here
+                    Gender = c.Gender.ToString(), // Convert enum to string
+                    Status = c.Status.ToString()  // Convert enum to string
+                })
+                .ToListAsync();
+
+            return Json(new { data = cows });
         }
 
         // GET: Cows/Details/5

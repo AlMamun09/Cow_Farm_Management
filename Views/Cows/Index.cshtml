@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Cow_Farm.Models.Cow>
+﻿@* The @model directive is no longer needed for the table but can be kept *@
+@model IEnumerable<Cow_Farm.Models.Cow>
 
 @{
     ViewData["Title"] = "Cow Management";
@@ -16,9 +17,9 @@
             </a>
         </div>
     </div>
-    <div class="card-body p-0">
+    <div class="card-body">
         <div class="table-responsive">
-            <table class="table table-bordered table-hover">
+            <table id="cowsTable" class="table table-bordered table-hover" style="width:100%">
                 <thead>
                     <tr>
                         <th>Tag Number</th>
@@ -31,30 +32,46 @@
                     </tr>
                 </thead>
                 <tbody>
-                    @foreach (var item in Model)
-                    {
-                        <tr>
-                            <td>@Html.DisplayFor(modelItem => item.TagNumber)</td>
-                            <td>@(item.Name ?? "N/A")</td>
-                            <td>@Html.DisplayFor(modelItem => item.Breed)</td>
-                            <td>@Html.DisplayFor(modelItem => item.BirthDate)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Gender)</td>
-                            <td>@Html.DisplayFor(modelItem => item.Status)</td>
-                            <td class="text-nowrap">
-                                <a asp-action="Edit" asp-route-id="@item.Id" class="btn btn-secondary btn-sm" title="Edit">
-                                    <i class="bi bi-pencil-square"></i>
-                                </a>
-                                <a asp-action="Details" asp-route-id="@item.Id" class="btn btn-info btn-sm ms-1" title="Details">
-                                    <i class="bi bi-info-circle"></i>
-                                </a>
-                                <a asp-action="Delete" asp-route-id="@item.Id" class="btn btn-danger btn-sm ms-1" title="Delete">
-                                    <i class="bi bi-trash"></i>
-                                </a>
-                            </td>
-                        </tr>
-                    }
                 </tbody>
             </table>
         </div>
     </div>
 </div>
+
+@section Scripts {
+    <script>
+        $(document).ready(function () {
+            $('#cowsTable').DataTable({
+                "ajax": {
+                    "url": "@Url.Action("GetCows", "Cows")",
+                    "type": "GET",
+                    "datatype": "json"
+                },
+                "columns": [
+                    { "data": "tagNumber" },
+                    {
+                        "data": "name",
+                        "render": function (data) {
+                            return data ? data : "N/A";
+                        }
+                    },
+                    { "data": "breed" },
+                    { "data": "birthDate" },
+                    { "data": "gender" },
+                    { "data": "status" },
+                    {
+                        "data": "id",
+                        "render": function (data) {
+                            return `<a href="/Cows/Edit/${data}" class="btn btn-secondary btn-sm" title="Edit"><i class="bi bi-pencil-square"></i></a> ` +
+                                   `<a href="/Cows/Details/${data}" class="btn btn-info btn-sm ms-1" title="Details"><i class="bi bi-info-circle"></i></a> ` +
+                                   `<a href="/Cows/Delete/${data}" class="btn btn-danger btn-sm ms-1" title="Delete"><i class="bi bi-trash"></i></a>`;
+                        },
+                        "orderable": false,
+                        "searchable": false,
+                        "width": "150px"
+                    }
+                ]
+            });
+        });
+    </script>
+}
