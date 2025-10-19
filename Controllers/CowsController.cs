@@ -77,8 +77,6 @@ namespace Cow_Farm.Controllers
         }
 
         // POST: Cows/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -91,14 +89,12 @@ namespace Cow_Farm.Controllers
 
             if (ModelState.IsValid)
             {
-                if (cow.Id == 0)
+                bool isNew = cow.Id == 0;
+                if (isNew)
                 {
-                    var lastCow = await _context.Cows
-                        .OrderByDescending(c => c.Id)
-                        .FirstOrDefaultAsync();
-
+                    // Logic to generate new TagNumber
+                    var lastCow = await _context.Cows.OrderByDescending(c => c.Id).FirstOrDefaultAsync();
                     int nextNumber = 1;
-
                     if (lastCow != null && !string.IsNullOrEmpty(lastCow.TagNumber) && lastCow.TagNumber.StartsWith("CID-"))
                     {
                         string lastNumberStr = lastCow.TagNumber.Substring(4);
@@ -115,12 +111,19 @@ namespace Cow_Farm.Controllers
                     _context.Update(cow);
                 }
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                // Instead of redirecting, return a JSON success response
+                TempData["SuccessMessage"] = isNew ? "New cow created successfully!" : "Cow record updated successfully!";
+                return Json(new { success = true, redirectUrl = Url.Action("Index", "Cows") });
             }
 
-            ViewBag.Genders = new SelectList(Enum.GetValues(typeof(Gender)));
-            ViewBag.Statuses = new SelectList(Enum.GetValues(typeof(CowStatus)));
-            return View(cow);
+            // If validation fails, return a JSON error response with the validation messages
+            var errors = ModelState.ToDictionary(
+                kvp => kvp.Key,
+                kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
+            );
+
+            return Json(new { success = false, errors = errors });
         }
 
         // GET: Cows/Edit/5
@@ -147,27 +150,7 @@ namespace Cow_Farm.Controllers
         }
 
 
-        // GET: Cows/Delete/5
-        [Authorize]
-        public async Task<IActionResult> Delete(int? id)
-        {
-            if (id == null)
-            {
-                return NotFound();
-            }
-
-            var cow = await _context.Cows
-                .FirstOrDefaultAsync(m => m.Id == id);
-            if (cow == null)
-            {
-                return NotFound();
-            }
-
-            return View(cow);
-        }
-
         // POST: Cows/Delete/5
-        [Authorize]
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
@@ -176,15 +159,10 @@ namespace Cow_Farm.Controllers
             if (cow != null)
             {
                 _context.Cows.Remove(cow);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Cow record deleted successfully." });
             }
-
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
-        }
-
-        private bool CowExists(int id)
-        {
-            return _context.Cows.Any(e => e.Id == id);
+            return Json(new { success = false, message = "Error: Cow not found." });
         }
     }
 }

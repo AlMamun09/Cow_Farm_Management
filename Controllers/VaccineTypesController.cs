@@ -22,10 +22,20 @@ namespace Cow_Farm.Controllers
         [HttpGet]
         public async Task<IActionResult> GetVaccineTypes()
         {
-            var vaccineTypes = await _context.VaccineTypes.ToListAsync();
-            return Json(vaccineTypes);
-        }
+            var vaccineTypes = await _context.VaccineTypes
+                .Select(v => new
+                {
+                    v.Id,
+                    v.Name,
+                    v.VaccineManufacturer,
+                    v.Price,
+                    v.Description
+                })
+                .ToListAsync();
 
+            // DataTables expects the array to be in a root property called "data"
+            return Json(new { data = vaccineTypes });
+        }
 
         [Authorize]
         //Get: VaccineTpes/Create
@@ -55,6 +65,22 @@ namespace Cow_Farm.Controllers
                 kvp => kvp.Value.Errors.Select(e => e.ErrorMessage).ToArray()
                 );
             return Json(new { success = false, errors = errors });
+        }
+
+        // POST: VaccineTypes/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var vaccineType = await _context.VaccineTypes.FindAsync(id);
+            if (vaccineType != null)
+            {
+                _context.VaccineTypes.Remove(vaccineType);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Vaccine type deleted successfully." });
+            }
+
+            return Json(new { success = false, message = "Error: Vaccine type not found." });
         }
     }
 }

@@ -18,9 +18,9 @@ namespace Cow_Farm.Models
         [DataType(DataType.Date)]
         public DateTime RecordDate { get; set; }
 
-        [Required]
         public string? Description { get; set; }
 
+        [Required]
         public string? Veterinarian { get; set; }
 
         [ForeignKey("CowId")]

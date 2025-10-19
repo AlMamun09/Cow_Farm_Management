@@ -10,7 +10,7 @@
     <div class="card-header">
         <h3 class="card-title">@ViewData["Title"]</h3>
     </div>
-    <form asp-action="Create" class="needs-validation" novalidate>
+    <form id="createCowForm" asp-action="Create" class="needs-validation" novalidate>
         <div class="card-body">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
 
@@ -32,12 +32,12 @@
 
                 <div class="col-md-6">
                     <label asp-for="Name" class="form-label"></label>
-                    <input asp-for="Name" class="form-control" />
+                    <input asp-for="Name" class="form-control" required />
                 </div>
 
                 <div class="col-md-6">
                     <label asp-for="Breed" class="form-label"></label>
-                    <input asp-for="Breed" class="form-control" required />
+                    <input asp-for="Breed" class="form-control" />
                 </div>
 
                 <div class="col-md-6">
@@ -85,4 +85,9 @@
     @{
         await Html.RenderPartialAsync("_ValidationScriptsPartial");
     }
+    <script>
+        $(function () {
+        var successMessage = '@(Model != null && Model.Id != 0 ? "'Cow record updated!'" : "'New cow created!'")';
+        handleAjaxFormSubmit('createCowForm', successMessage);        });
+    </script>
 }

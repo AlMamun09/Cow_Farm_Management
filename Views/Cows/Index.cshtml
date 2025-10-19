@@ -1,7 +1,4 @@
-﻿@* The @model directive is no longer needed for the table but can be kept *@
-@model IEnumerable<Cow_Farm.Models.Cow>
-
-@{
+﻿@{
     ViewData["Title"] = "Cow Management";
 }
 
@@ -41,7 +38,8 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            $('#cowsTable').DataTable({
+            // Keep a reference to the table
+            var table = $('#cowsTable').DataTable({
                 "ajax": {
                     "url": "@Url.Action("GetCows", "Cows")",
                     "type": "GET",
@@ -51,9 +49,7 @@
                     { "data": "tagNumber" },
                     {
                         "data": "name",
-                        "render": function (data) {
-                            return data ? data : "N/A";
-                        }
+                        "render": function (data) { return data ? data : "N/A"; }
                     },
                     { "data": "breed" },
                     { "data": "birthDate" },
@@ -61,17 +57,58 @@
                     { "data": "status" },
                     {
                         "data": "id",
+                        "className": "text-center",
                         "render": function (data) {
+                            // The delete link is now a button with a class and data-id
                             return `<a href="/Cows/Edit/${data}" class="btn btn-secondary btn-sm" title="Edit"><i class="bi bi-pencil-square"></i></a> ` +
                                    `<a href="/Cows/Details/${data}" class="btn btn-info btn-sm ms-1" title="Details"><i class="bi bi-info-circle"></i></a> ` +
-                                   `<a href="/Cows/Delete/${data}" class="btn btn-danger btn-sm ms-1" title="Delete"><i class="bi bi-trash"></i></a>`;
+                                   `<button type="button" class="btn btn-danger btn-sm ms-1 js-delete" data-id="${data}" title="Delete"><i class="bi bi-trash"></i></button>`;
                         },
-                        "orderable": false,
-                        "searchable": false,
-                        "width": "150px"
+                        "orderable": false
                     }
                 ]
+            });
+
+            // This is the click handler for our new delete button
+            $('#cowsTable').on('click', '.js-delete', function () {
+                var button = $(this);
+                var cowId = button.data('id');
+
+                Swal.fire({
+                  title: "Are you sure?",
+                  text: "You won't be able to revert this!",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    // If confirmed, send the AJAX request
+                    $.ajax({
+                        url: '/Cows/Delete/' + cowId,
+                        type: 'POST',
+                        headers: {
+                            "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire('Deleted!', response.message, 'success');
+                                // Refresh the table to show the record is gone
+                                table.ajax.reload();
+                            } else {
+                                Swal.fire('Error!', response.message, 'error');
+                            }
+                        }
+                    });
+                  }
+                });
             });
         });
     </script>
 }
+
+@* This hidden form provides the anti-forgery token for security *@
+<form asp-action="Delete" asp-controller="Cows" method="post">
+    @Html.AntiForgeryToken()
+</form>

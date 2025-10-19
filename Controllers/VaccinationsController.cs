@@ -14,14 +14,28 @@ namespace Cow_Farm.Controllers
         }
 
         // GET: Vaccinations
-        public async Task<IActionResult> Index()
+        public IActionResult Index()
+        {
+            return View();
+        }
+
+        [HttpGet]
+        public async Task<IActionResult> GetVaccinations()
         {
             var vaccinations = await _context.Vaccinations
                 .Include(v => v.Cow)
                 .Include(v => v.VaccineType)
+                .Select(v => new
+                {
+                    v.Id,
+                    CowTagNumber = v.Cow != null ? v.Cow.TagNumber : "N/A",
+                    VaccineName = v.VaccineType != null ? v.VaccineType.Name : "N/A",
+                    DateGiven = v.DateGiven.ToShortDateString(),
+                    NextDueDate = v.NextDueDate.HasValue ? v.NextDueDate.Value.ToShortDateString() : "N/A"
+                })
                 .ToListAsync();
 
-            return View(vaccinations);
+            return Json(new { data = vaccinations });
         }
 
         [Authorize]
@@ -48,6 +62,22 @@ namespace Cow_Farm.Controllers
             ViewData["CowId"] = new SelectList(_context.Cows, "Id", "TagNumber", vaccination.CowId);
             ViewData["VaccineTypeId"] = new SelectList(_context.VaccineTypes, "Id", "Name", vaccination.VaccineTypeId);
             return View(vaccination);
+        }
+
+        // POST: Vaccinations/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> DeleteConfirmed(int id)
+        {
+            var vaccination = await _context.Vaccinations.FindAsync(id);
+            if (vaccination != null)
+            {
+                _context.Vaccinations.Remove(vaccination);
+                await _context.SaveChangesAsync();
+                return Json(new { success = true, message = "Vaccination record deleted successfully." });
+            }
+
+            return Json(new { success = false, message = "Error: Record not found." });
         }
     }
 }

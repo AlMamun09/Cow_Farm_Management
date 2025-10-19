@@ -16,7 +16,7 @@
     </div>
     <div class="card-body">
         <div class="table-responsive">
-            <table id="vaccineTypesTable" class="table table-bordered table-hover">
+            <table id="vaccineTypesTable" class="table table-bordered table-hover" style="width:100%">
                 <thead>
                     <tr>
                         <th>Vaccine Name</th>
@@ -36,41 +36,81 @@
 @section Scripts {
     <script>
         $(document).ready(function () {
-            const columns = [
-                { "data": "name" },
-                { "data": "vaccineManufacturer", "defaultContent": "N/A" },
-                {
-                    "data": "price",
-                    "className": "text-end", // Right-align the data in this column
-                    "render": function (data, type, row) {
-                        return data.toFixed(2) + " Taka";
-                    }
+            var table = $('#vaccineTypesTable').DataTable({
+                "ajax": {
+                    "url": "@Url.Action("GetVaccineTypes", "VaccineTypes")",
+                    "type": "GET",
+                    "datatype": "json"
                 },
-                {
-                    "data": "description",
-                    "defaultContent": "N/A",
-                    "render": function (data, type, row) {
-                        // Truncate long descriptions and add a tooltip
-                        if (data && data.length > 50) {
-                            return `<span title="${data}">${data.substring(0, 50)}...</span>`;
+                "columns": [
+                    { "data": "name" },
+                    { "data": "vaccineManufacturer", "defaultContent": "N/A" },
+                    {
+                        "data": "price",
+                        "className": "text-end",
+                        "render": function (data, type, row) {
+                            return data.toFixed(2) + " Taka";
                         }
-                        return data;
-                    }
-                },
-                {
-                    "data": "id",
-                    "className": "text-center", // Center-align the buttons
-                    "render": function (data, type, row) {
-                        return `
-                            <a href="/VaccineTypes/Edit/${data}" class="btn btn-secondary btn-sm" title="Edit"><i class="bi bi-pencil-square"></i></a>
-                            <a href="/VaccineTypes/Details/${data}" class="btn btn-info btn-sm ms-1" title="Details"><i class="bi bi-info-circle"></i></a>
-                            <a href="/VaccineTypes/Delete/${data}" class="btn btn-danger btn-sm ms-1" title="Delete"><i class="bi bi-trash"></i></a>`;
                     },
-                    "orderable": false
-                }
-            ];
+                    {
+                        "data": "description",
+                        "defaultContent": "N/A",
+                        "render": function (data, type, row) {
+                            if (data && data.length > 50) {
+                                return `<span title="${data}">${data.substring(0, 50)}...</span>`;
+                            }
+                            return data;
+                        }
+                    },
+                    {
+                        "data": "id",
+                        "className": "text-center",
+                        "render": function (data, type, row) {
+                            return `<a href="/VaccineTypes/Edit/${data}" class="btn btn-secondary btn-sm" title="Edit"><i class="bi bi-pencil-square"></i></a> ` +
+                                   `<a href="/VaccineTypes/Details/${data}" class="btn btn-info btn-sm ms-1" title="Details"><i class="bi bi-info-circle"></i></a> ` +
+                                   `<button type="button" class="btn btn-danger btn-sm ms-1 js-delete" data-id="${data}" title="Delete"><i class="bi bi-trash"></i></button>`;
+                        },
+                        "orderable": false
+                    }
+                ]
+            });
 
-            loadTable('vaccineTypesTable', '@Url.Action("GetVaccineTypes", "VaccineTypes")', columns);
+            $('#vaccineTypesTable').on('click', '.js-delete', function () {
+                var button = $(this);
+                var typeId = button.data('id');
+
+                Swal.fire({
+                  title: "Are you sure?",
+                  text: "This vaccine type will be permanently deleted.",
+                  icon: "warning",
+                  showCancelButton: true,
+                  confirmButtonColor: "#3085d6",
+                  cancelButtonColor: "#d33",
+                  confirmButtonText: "Yes, delete it!"
+                }).then((result) => {
+                  if (result.isConfirmed) {
+                    $.ajax({
+                        url: '/VaccineTypes/Delete/' + typeId,
+                        type: 'POST',
+                        headers: {
+                            "RequestVerificationToken": $('input[name="__RequestVerificationToken"]').val()
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                Swal.fire('Deleted!', response.message, 'success');
+                                table.ajax.reload();
+                            } else {
+                                Swal.fire('Error!', response.message, 'error');
+                            }
+                        }
+                    });
+                  }
+                });
+            });
         });
     </script>
 }
+
+<form asp-action="Delete" asp-controller="VaccineTypes" method="post">
+    @Html.AntiForgeryToken()
+</form>
